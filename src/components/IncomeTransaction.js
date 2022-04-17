@@ -1,6 +1,10 @@
-import React from 'react'
+import React, {useContext} from 'react'
+import { GlobalContext } from '../context/GlobalState'
+import { TiDelete } from 'react-icons/ti';
+
 
 const IncomeTransaction = ({ incomeTransaction }) => {
+    const {deleteTransaction}= useContext(GlobalContext)
     return (
 
         <div className='container'>
@@ -21,7 +25,7 @@ const IncomeTransaction = ({ incomeTransaction }) => {
 
             <div className='col-1'>
                 <button class='btn btn-danger'>
-                    <i className='fas fa-trash'></i>
+                <TiDelete size='1.5em' onClick={()=>deleteTransaction(incomeTransaction.id)} />
                 </button>
             </div>
 
