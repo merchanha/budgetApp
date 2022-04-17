@@ -1,28 +1,19 @@
 export default (state, action) => {
+    let transactions;
     switch (action.type) {
-        case 'ADD_INCOME':
-            return {
-                ...state,
-                incomeTransactions: [action.payload, ...state.incomeTransactions],
-            };
+        case 'ADD_TRANSACTION':
+            transactions = [action.payload, ...state];
 
-        case 'ADD_EXPENSE':
-            return {
-                ...state,
-                expenseTransactions: [action.payload, ...state.expenseTransactions],
-            };
-
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+      
+            return transactions;
+       
         case 'DELETE_TRANSACTION':
-            return {
-                ...state,
-                incomeTransactions: state.incomeTransactions.filter(
-                    (incomeTransaction)=> incomeTransaction.id!==action.payload
-                ),
-                expenseTransactions: state.expenseTransactions.filter(
-                    (expenseTransaction)=> expenseTransaction.id!==action.payload
-                ),
-            };
+            transactions = state.filter((transaction) => transaction.id !== action.payload);
 
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+
+      return transactions;
         default:
             return state;
     }

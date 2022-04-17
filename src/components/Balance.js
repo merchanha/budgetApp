@@ -3,18 +3,13 @@ import { GlobalContext } from '../context/GlobalState'
 import IncomeTransaction from './IncomeTransaction'
 
 const Balance = () => {
-    const {incomeTransactions, expenseTransactions} = useContext(GlobalContext)
-    const incomeAmounts = incomeTransactions.map(
-        incomeTransaction=> incomeTransaction.incomeAmount
-    )
+    const {transactions} = useContext(GlobalContext)
+    
+    const totalIncome = transactions.reduce((acc,item)=>(item.type === "Income"? acc+ item.amount: acc),0).toFixed(2)
+      
+    const totalExpense = transactions.reduce((acc,item)=>(item.type === "Expense"? acc+ item.amount: acc),0).toFixed(2)
 
-    const expenseAmounts = expenseTransactions.map(
-        expenseTransaction=> expenseTransaction.expenseAmount
-    )
-
-    const totalIncome = incomeAmounts.reduce((acc,item)=>(acc+=item), 0).toFixed(2)
-    const totalExpense = expenseAmounts.reduce((acc,item)=>(acc+=item), 0).toFixed(2)
-
+    const balance = transactions.reduce((acc, currVal) => (currVal.type === 'Expense' ? acc - currVal.amount : acc + currVal.amount), 0);
 
 
     return (
@@ -24,7 +19,7 @@ const Balance = () => {
             
             <div class='row mt-3'>
             <div class='col-sm'>
-            <h3 class='alert alert-secondary p-4 d-flex align-items-center justify-content-between'>Budget: ${(totalIncome-totalExpense).toFixed(2)}</h3>
+            <h3 class='alert alert-secondary p-4 d-flex align-items-center justify-content-between'>Budget: ${(balance).toFixed(2)}</h3>
 
             </div>
                 <div class='col-sm'>
@@ -41,7 +36,6 @@ const Balance = () => {
                     </div>
                 
             </div>
-
 
         </div>
     )

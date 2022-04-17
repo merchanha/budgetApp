@@ -1,13 +1,22 @@
 import React, { useState, useContext } from 'react'
-import ExpenseList from './ExpenseList'
 import IncomeList from './IncomeList'
 import { v4 as uuidv4 } from 'uuid'
+import formatDate from '../utils/formatDate'
 import { GlobalContext } from '../context/GlobalState'
 
+const initialState = {
+  amount: '',
+  description: '',
+  type: 'Income',
+  date: formatDate(new Date()),
+};
+
+
+
 const AddTransaction = () => {
-  const { addIncome, addExpense } = useContext(GlobalContext)
-  const [income, setIncome] = useState({ incomeText: '', incomeAmount: 0, incomeDate: null })
-  const { incomeText, incomeAmount, incomeDate } = income
+  const { addTransaction } = useContext(GlobalContext)
+  const [income, setIncome] = useState(initialState)
+  const { amount, description, date, type } = income
 
   const onChangeIncome = (e) => {
     setIncome({ ...income, [e.target.name]: e.target.value })
@@ -15,54 +24,25 @@ const AddTransaction = () => {
   }
   const onSubmitIncome = (e) => {
     e.preventDefault();
-    if (incomeText !== "") {
+    if (description !== "") {
       const newIncomeTransaction = {
         id: uuidv4(),
-        incomeText,
-        incomeAmount: incomeAmount * 1,
-        incomeDate
+        description,
+        amount: amount * 1,
+        date,
+        type
 
       };
-      addIncome(newIncomeTransaction);
+      addTransaction(newIncomeTransaction);
       setIncome({
-        incomeText: '',
-        incomeAmount: 0,
-        incomeDate: null
+        description: '',
+        amount: 0,
+        date: null,
+        type
 
       })
     }
   }
-
-  //EXPENSE
-
-  const [expense, setExpense] = useState({ expenseText: '', expenseAmount: 0, expenseDate: null })
-  const { expenseText, expenseAmount, expenseDate } = expense
-
-  const onChangeExpense = (e) => {
-    setExpense({ ...expense, [e.target.name]: e.target.value })
-
-  }
-  const onSubmitExpense = (e) => {
-    e.preventDefault();
-
-    if (expenseText !== "") {
-      const newExpenseTransaction = {
-        id: uuidv4(),
-        expenseText,
-        expenseAmount: expenseAmount * 1,
-        expenseDate
-
-      };
-      addExpense(newExpenseTransaction);
-      setExpense({
-        expenseText: '',
-        expenseAmount: 0,
-        expenseDate: null
-      })
-
-    }
-  }
-
 
   return (
     <>
@@ -72,24 +52,24 @@ const AddTransaction = () => {
           <div class='row'>
             <div class='col-sm col-lg-3'>
               <label for='name'>Name</label>
-              <input type='text' name='incomeText' value={incomeText} placeholder='Add Income...' autoComplete='off' onChange={onChangeIncome} />
+              <input type='text' name='description' value={description} placeholder='Add Income...' autoComplete='off' onChange={onChangeIncome} />
             </div>
 
             <div class='col-sm col-lg-3'>
               <label for='amount'>Amount</label>
-              <input type='number' name='incomeAmount' value={incomeAmount} placeholder='Amount' autoComplete='off' onChange={onChangeIncome} />
+              <input type='number' name='amount' value={amount} placeholder='Amount' autoComplete='off' onChange={onChangeIncome} />
             </div>
 
             <div class='col-sm col-lg-3'>
               <label for='amount'>Date</label>
-              <input type="date" name="incomeDate" value={incomeDate} id="date" placeholder="Income date..." onChange={onChangeIncome} />
+              <input type="date" name="date" value={date} id="date" placeholder="Income date..." onChange={onChangeIncome} />
             </div>
 
             <div class='col-sm col-lg-3'>
-              <select class="inputGroup">
+              <select class="inputGroup" value={type} onChange={(e) => setIncome({ ...income, type: e.target.value })}>
                 <option selected>Type</option>
-                <option value="1">Income</option>
-                <option value="2">Expense</option>
+                <option value="Income">Income</option>
+                <option value="Expense">Expense</option>
               </select>
 
             </div>
@@ -104,40 +84,7 @@ const AddTransaction = () => {
         <IncomeList />
 
       </div>
-
-      <hr />
-
-      <div class=' mt-4 container'>
-        <h3 className='mt-3'>Add Expense</h3>
-        <form onSubmit={onSubmitExpense}>
-          <div className='row'>
-
-            <div class='col-sm col-lg-4'>
-              <label for='name'>Name</label>
-              <input type='text' name='expenseText' value={expenseText} placeholder='Add Expense...' autoComplete='off' onChange={onChangeExpense} />
-            </div>
-
-            <div class='col-sm col-lg-4'>
-              <label for='amount'>Amount</label>
-              <input type='number' name='expenseAmount' value={expenseAmount} placeholder='Amount' autoComplete='off' onChange={onChangeExpense} />
-            </div>
-
-            <div class='col-sm col-lg-4'>
-              <label for='amount'>Date</label>
-              <input type='date' name='expenseDate' value={expenseDate} id='date' placeholder='Expense date...' onChange={onChangeExpense} />
-            </div>
-
-            <div class='row mt-3'>
-              <div class='col-sm'>
-                <input type='submit' value='Submit' class='btn btn-primary' />
-              </div>
-            </div>
-
-          </div>
-        </form>
-        <ExpenseList />
-
-      </div>
+      
     </>
 
   )
