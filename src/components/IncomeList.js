@@ -15,9 +15,6 @@ const IncomeList = () => {
             {transactions.map(transaction=>(
                 
                 <IncomeTransaction key={transaction.id}transaction={transaction}/>
-                
-                
-               
             ))}
                 
             </ul>

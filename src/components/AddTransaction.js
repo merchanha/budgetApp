@@ -12,7 +12,6 @@ const initialState = {
 };
 
 
-
 const AddTransaction = () => {
   const { addTransaction } = useContext(GlobalContext)
   const [income, setIncome] = useState(initialState)
