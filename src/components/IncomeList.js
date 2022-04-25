@@ -1,10 +1,21 @@
-import React, {useContext} from 'react'
+import React, {useContext, useEffect} from 'react'
 import { GlobalContext } from '../context/GlobalState'
 import IncomeTransaction from './IncomeTransaction';
 import '../App.css'
+import Axios from 'axios'
 
 const IncomeList = () => {
+
     const {transactions} = useContext(GlobalContext)
+
+    
+    useEffect(()=>{
+        Axios.get('http://localhost:4000/budget').then((response)=>{
+            console.log(response)
+            
+        })
+        
+    },[])
 
     console.log(transactions);
 

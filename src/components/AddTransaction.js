@@ -3,6 +3,7 @@ import IncomeList from './IncomeList'
 import { v4 as uuidv4 } from 'uuid'
 import formatDate from '../utils/formatDate'
 import { GlobalContext } from '../context/GlobalState'
+import Axios from 'axios'
 
 const initialState = {
   amount: '',
@@ -10,7 +11,6 @@ const initialState = {
   type: 'Income',
   date: formatDate(new Date()),
 };
-
 
 const AddTransaction = () => {
   const { addTransaction } = useContext(GlobalContext)
@@ -23,25 +23,19 @@ const AddTransaction = () => {
   }
   const onSubmitIncome = (e) => {
     e.preventDefault();
-    if (description !== "") {
-      const newIncomeTransaction = {
+
+      Axios.post('http://localhost:4000/budget', {
         id: uuidv4(),
-        description,
+        description: description,
         amount: amount * 1,
-        date,
-        type
+        date:date,
+        type: type
 
-      };
-      addTransaction(newIncomeTransaction);
-      setIncome({
-        description: '',
-        amount: 0,
-        date: null,
-        type
-
+      }).then((response)=>{
+        console.log(response)
       })
     }
-  }
+  
 
   return (
     <>
@@ -50,22 +44,22 @@ const AddTransaction = () => {
         <form onSubmit={onSubmitIncome}>
           <div class='row'>
             <div class='col-sm col-lg-3'>
-              <label for='name'>Name</label>
-              <input type='text' name='description' value={description} placeholder='Add Income...' autoComplete='off' onChange={onChangeIncome} />
+              <label for='name'>Description</label>
+              <input type='text' name='description' value={description|| ''} placeholder='Add Income...' autoComplete='off' onChange={onChangeIncome} />
             </div>
 
             <div class='col-sm col-lg-3'>
               <label for='amount'>Amount</label>
-              <input type='number' name='amount' value={amount} placeholder='Amount' autoComplete='off' onChange={onChangeIncome} />
+              <input type='number' name='amount' value={amount || ''} placeholder='Amount' autoComplete='off' onChange={onChangeIncome} />
             </div>
 
             <div class='col-sm col-lg-3'>
               <label for='amount'>Date</label>
-              <input type="date" name="date" value={date} id="date" placeholder="Income date..." onChange={onChangeIncome} />
+              <input type="date" name="date" value={date|| ''} id="date" placeholder="Income date..." onChange={onChangeIncome} />
             </div>
 
             <div class='col-sm col-lg-3'>
-              <select class="inputGroup" value={type} onChange={(e) => setIncome({ ...income, type: e.target.value })}>
+              <select class="inputGroup" value={type|| ''} onChange={(e) => setIncome({ ...income, type: e.target.value })}>
                 <option selected>Type</option>
                 <option value="Income">Income</option>
                 <option value="Expense">Expense</option>
@@ -83,7 +77,7 @@ const AddTransaction = () => {
         <IncomeList />
 
       </div>
-      
+
     </>
 
   )

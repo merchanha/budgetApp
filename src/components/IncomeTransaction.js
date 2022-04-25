@@ -3,8 +3,12 @@ import { GlobalContext } from '../context/GlobalState'
 import { TiDelete } from 'react-icons/ti';
 
 
+
 const IncomeTransaction = ({ transaction }) => {
+ 
+
     const {deleteTransaction}= useContext(GlobalContext)
+
     return (
 
         <div className='container'>
